@@ -5,13 +5,10 @@ struct Linked_List{
 };
 
 void init_Linked_List(void);
-void add_char (char value);
-void moveBack(int times);
-void moveForword(int times);
+void printCharToTerminal(char c);
+void removeCharFromTerminal(void);
+
+void moveBack(void);
+void moveForword(void);
 void moveToStart(void);
 void moveToEnd(void);
-void removeChar(void);
-
-void printCurrentValue(void);
-void printFromRoot(void);
-void printFromCurrent(void);

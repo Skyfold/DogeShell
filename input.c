@@ -46,25 +46,19 @@ int main(void){
     init_Linked_List();
     setTermios();
 
-    int moved = 0;
     int c = '\0';
     for (;;){
-        read(STDIN_FILENO, &c, 1);
 
+        read(STDIN_FILENO, &c, 1);
         switch(c){
 
+            // c-d key;
             case '\004':
                 exit(0);
 
             //this is the delete key
             case '\177':
-                removeChar();
-                printf("\033[D");//moves the cursor left 
-                printf("\033[K");
-                printFromCurrent();
-                moveBack(moved);
-                fflush(stdout);
-                //printCurrentValue();
+                removeCharFromTerminal();
                 break;
 
             case '\033':
@@ -73,13 +67,11 @@ int main(void){
                 switch (c){
                     case 'D': 
                     //left
-                    moveBack(1);
-                    moved++;
+                    moveBack();
                         break;
                     case 'C':
                     //right
-                    moveForword(1);
-                    moved--;
+                    moveForword();
                         break;
                     case 'A':
                     //up
@@ -95,17 +87,11 @@ int main(void){
 
             case '\n':
                 printf("\n");
-                printFromRoot();
+                //printFromRoot();
                 printf("\n");
                 break;
             default:
-                add_char(c);
-                printf("\033[K");
-                printf("%c", c);
-                printFromCurrent();
-                moveBack(moved);
-
-                fflush(stdout);
+                printCharToTerminal(c);
         }
     }
 }

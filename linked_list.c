@@ -6,6 +6,7 @@
 
 struct Linked_List* root;
 struct Linked_List* current;
+int distance_from_end;
 
 struct Linked_List* create_Linked_List (void){
     struct Linked_List* list;
@@ -18,6 +19,7 @@ struct Linked_List* create_Linked_List (void){
 void init_Linked_List(void){
     current = create_Linked_List();
     root = current;
+    distance_from_end = 0;
 }
 
 void add_char (char value){
@@ -46,39 +48,54 @@ void add_char (char value){
     }
 }
 
-void moveBack(int times){
-    for (int i = 0; i < times; ++i)
+void moveCursorToCurrentFromEnd(void){
+    for (int i = 0; i < distance_from_end; ++i)
     {
-        if (current->parent){
-            current = current->parent;
+        if(current->parent == NULL){
+            fprintf(stderr, "\nYou moved from the end to a point off the end of the list. This means your pointer to current does not match your cursor");
+            exit(EXIT_FAILURE);
         }
+
+        current = current->parent;
         printf("\033[D");
         fflush(stdout);
     }
 }
 
-void moveForword(int times){
-    for (int i = 0; i < times; ++i)
-    {
-        if (current->child){
-            current = current->child;
-        }
+void moveBack(void){
+    if (current->parent){
+        current = current->parent;
+        printf("\033[D");
+        fflush(stdout);
+        distance_from_end++;
+    }
+}
+
+void moveForword(void){
+    if (current->child){
+        current = current->child;
         printf("\033[C");
         fflush(stdout);
+        distance_from_end--;
     }
-
 }
 
 //You must move the root to start as well.
 void moveToStart(void){
     while(current->parent){
         current = current->parent;
+        printf("\033[D");
+        fflush(stdout);
+        distance_from_end++;
     }
 }
 
 void moveToEnd(void){
     while(current->child){
         current = current->child;
+        printf("\033[D");
+        fflush(stdout);
+        distance_from_end--;
     }
 }
 
@@ -108,6 +125,15 @@ void printCurrentValue(void){
     fflush(stdout);
 }
 
+
+
+//char* TokenInput(void){
+
+//}
+
+
+
+//This was used for debugging code
 void printFromRoot(void){
     struct Linked_List* temp;
     temp  = root;
@@ -124,6 +150,24 @@ void printFromCurrent(void){
     printf("%c", current->value);
     current = current->child;
     }
+    fflush(stdout);
+}
+
+void printCharToTerminal(char c){
+    add_char(c);
+    printf("\033[K");
+    printf("%c", c);
+    printFromCurrent();
+    moveCursorToCurrentFromEnd();
+    fflush(stdout);
+}
+
+void removeCharFromTerminal(void){
+    removeChar();
+    printf("\033[D");//moves the cursor left 
+    printf("\033[K");
+    printFromCurrent();
+    moveCursorToCurrentFromEnd();
     fflush(stdout);
 }
 
