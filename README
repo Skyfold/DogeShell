@@ -1,3 +1,10 @@
+Install:
+
+--Download files and run make
+
+-- Then type ./DogeShell to run the shell
+
+
 References include:
 
 Guide to how fork works that I used for my project.
@@ -9,5 +16,3 @@ http://blog.eduardofleury.com/archives/2007/11/16
 
 Ascii-Table
 http://ascii-table.com/ansi-escape-sequences.php
-
-Jan escape sequence 
