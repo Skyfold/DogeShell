@@ -1,4 +1,13 @@
 References include:
 
-Guide to how fork works.
+Guide to how fork works that I used for my project.
 http://stackoverflow.com/questions/19099663/how-to-correctly-use-fork-exec-wait
+
+Guides on how to Termios
+http://www.gnu.org/software/libc/manual/html_node/Noncanon-Example.html
+http://blog.eduardofleury.com/archives/2007/11/16
+
+Ascii-Table
+http://ascii-table.com/ansi-escape-sequences.php
+
+Jan escape sequence 

@@ -1,18 +1,17 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "linked_list.h"
+
 
 struct Linked_List* root;
 struct Linked_List* current;
 int distance_from_end;
+int total_elements;
 
 struct Linked_List* create_Linked_List (void){
     struct Linked_List* list;
     list = (struct Linked_List*)malloc(sizeof(struct Linked_List));
     list->parent = NULL;
     list->child = NULL;
+    list->value = '\0';
     return list;
 }
 
@@ -20,6 +19,7 @@ void init_Linked_List(void){
     current = create_Linked_List();
     root = current;
     distance_from_end = 0;
+    total_elements = 0;
 }
 
 void add_char (char value){
@@ -42,6 +42,7 @@ void add_char (char value){
             Insert_List->child = current;
             Insert_List->value = value;
         }
+        total_elements++;
     } else {
         fprintf(stderr, "You did not initialize your linked_list");
         exit(EXIT_FAILURE);
@@ -99,39 +100,44 @@ void moveToEnd(void){
     }
 }
 
-void removeChar(void){
+char removeChar(void){
+    char deleated = '\0';
     struct Linked_List* toBeRemoved = current->parent;
     if (current->parent != NULL){
         if(current->child == NULL){
+            deleated = toBeRemoved->value;
             toBeRemoved->child = NULL;
             toBeRemoved->value = '\0';
             free(current);
             current = toBeRemoved;
 
         } else if(current->parent->parent){
+            deleated = current->parent->value;
             current->parent->parent->child = current;
             current->parent = toBeRemoved->parent;
             free(toBeRemoved);
         } else {
+            deleated = current->parent->value;
             current->parent = NULL;
             free(toBeRemoved);
             root = current;
         }
+        total_elements--;
     }
+    return deleated;
 }   
 
-void printCurrentValue(void){
-    printf("     %c", current->value);
-    fflush(stdout);
+char* flattenList(void){
+    char* temp = (char*)malloc(((total_elements)*sizeof(char)));
+    for (int i = 0; root->child; ++i)
+    {
+        temp[i] = root->value;
+        struct Linked_List* templist = root;
+        root = root->child;
+        free(templist);
+    }
+    return temp;
 }
-
-
-
-//char* TokenInput(void){
-
-//}
-
-
 
 //This was used for debugging code
 void printFromRoot(void){
@@ -163,12 +169,40 @@ void printCharToTerminal(char c){
 }
 
 void removeCharFromTerminal(void){
-    removeChar();
-    printf("\033[D");//moves the cursor left 
-    printf("\033[K");
-    printFromCurrent();
-    moveCursorToCurrentFromEnd();
+    if(current->parent){   
+        removeChar();
+        printf("\033[D");//moves the cursor left 
+        printf("\033[K");
+        printFromCurrent();
+        moveCursorToCurrentFromEnd();
+        fflush(stdout);
+    }
+}
+
+//Fix the fact that there is a new line at root for no reason
+bool LineIsEmpty(void){
+    if (root->value == '\0' || root->value == '\n'){
+        return true;
+    } else{
+        return false;
+    }
+}
+
+void whatIsAtRoot(void){
+    printf("%c\n", root->value);
     fflush(stdout);
+}
+
+void whatIsAtCurrent(void){
+    printf("%c\n", current->value);
+    fflush(stdout);
+}
+
+void RemoveAllText(void){
+    while(current->parent != NULL)
+    {
+        removeCharFromTerminal();
+    }
 }
 
 // int main(){
